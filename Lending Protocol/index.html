@@ -29,8 +29,8 @@
             
         
                 <div class="text-end">
-                  <button type="button" class="btn btn-outline-light me-2">Connect Wallet</button>
-                  <img src="./metamask-2728406-2261817.png" width="40px">
+                  <button type="button" class="btn btn-outline-light me-2" id="connectButton" onclick="connect()">Connect Wallet</button>
+                  <img src="./images/metamask-2728406-2261817.png" width="40px">
                 </div>
               </div>
             </div>
@@ -40,11 +40,44 @@
     <div id="background-img">
         <div id="text">
 
-        <div id="upload">
-            <div class="box"> 
-                <h1 class="center"></h1>
+        <div id="upload" class="popup" >
+            <div class="box" id="popup"> 
+                <div class="box-content">
+                <img src="./images/upload.png" class="uploadimg" width="180px">
+                <h2>Upload Assets</h2>
+                <p class="center">Ready? Start with uploading your assets. It's fast and secure. Your 
+                  security is our priority!
+                </p>
+                <p class="center attach"><img src="./images/paper-clip.png" width="20px" height="20px" class="clip"><a href="#">Please attach your file here.</a></p>
+                <button class="uploadbtn" type="button" onclick="closePopup()">Upload</button>
+                </div>
             </div>
         </div>
+
+        <div id="exchange" class="popup2">
+          <div class="box2" id="popup2"> 
+            <h2 class="center">Exchange</h2>
+            <p class="center calculate">Effortlessly calculate and convert your cryptocurrency holdings into another token by specifying the desired amount.</p>
+            <form action="">
+              <img src="./images/exchange.png" class="circle" width="40px">
+              <div>
+                
+                <input type="text" id="color" placeholder="Enter Amount"/>
+              </div>
+              
+              <div>
+                <input type="text" placeholder="Enter Amount"/>
+              </div>
+            </form>
+          
+            
+
+            <button class="exchangebtn" type="button" onclick="closePopup2()">Exchange</button>
+           
+          </div>
+      </div>
+
+        
 
         
         <div id="column2">
@@ -54,8 +87,8 @@
             Our lending protocol offers you a secure, efficient, and <br> flexible way to put your crypto to work for you.
         </p>
         <div class="buysell">
-        <button>Upload Assets</button>
-        <button class="outline">Exchange</button>
+        <button type="submit" onclick="openPopup()">Upload Assets</button>
+        <button class="outline" type="submit" onclick="openPopup2()">Exchange</button>
         </div>
         </div>  
         
@@ -70,10 +103,49 @@
 
     <footer>
         <p>&copy; 2023 CryptoLending. All rights reserved. Image by <a href="https://www.freepik.com/free-vector/gradient-abstract-background-with-different-shapes_18776869.htm#query=ui%20background&position=11&from_view=search&track=ais">Freepik</a></p>
-    </footer>
+        
+        <a href="https://www.flaticon.com/free-icons/paper-clip" title="paper clip icons">Paper clip icons created by Hilmy Abiyyu A. - Flaticon</a>
+        <a href="https://www.flaticon.com/free-icons/refresh" title="refresh icons">Refresh icons created by itim2101 - Flaticon</a>
+        <a href="https://www.flaticon.com/free-icons/upload-file" title="upload file icons">Upload file icons created by HideMaru - Flaticon</a>
+      </footer>
 
 
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
-</body>
+
+
+      <script>
+        const popup = document.getElementById("popup");
+
+        function openPopup(){
+          popup.classList.add("open-popup");
+
+        }
+
+        function closePopup(){
+          popup.classList.remove("open-popup");
+        }
+
+        const popup2 = document.getElementById("popup2");
+
+        function openPopup2(){
+          popup2.classList.add("open-popup2");
+
+        }
+
+        function closePopup2(){
+          popup2.classList.remove("open-popup2");
+        }
+
+        async function connect() {
+          if(typeof window.ethereum !== "undefined"){
+            window.ethereum.request({method: "eth_requestAccounts"})
+          } else {
+            console.log("No Metamask!")
+          }
+        }
+      </script>
+
+
+  </body>
 </html>
