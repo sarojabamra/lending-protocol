@@ -111,9 +111,7 @@ a:hover{
     transform: scale(1);
 }
 
-.calculate{
-    font-size: 1px;
-}
+
 
 
 #exchange {
@@ -153,6 +151,7 @@ form input {
     border-radius: 5px;
     box-shadow: #0f1e23 ;
     background-image: linear-gradient(144deg,#AF40FF, #5B42F3 25%,#00DDEB);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 
