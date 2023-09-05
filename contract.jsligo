@@ -1,0 +1,80 @@
+type storage = {
+  tokenBalance: map(address, nat);
+  borrowerAllowance: map(address, nat);
+};
+
+type action =
+  | Borrow(nat)
+  | Repay(nat)
+  | Withdraw(nat);
+
+function updateTokenBalance(tokenBalance: map(address, nat), address: address, amount: nat): map(address, nat) {
+  tokenBalance[address] = tokenBalance[address] + amount;
+  return tokenBalance;
+}
+
+function updateBorrowerAllowance(borrowerAllowance: map(address, nat), address: address, amount: nat): map(address, nat) {
+  borrowerAllowance[address] = borrowerAllowance[address] - amount;
+  return borrowerAllowance;
+}
+
+function contract(entrypoint: action, storage: storage): storage is
+  block {
+    skip;
+  } with {
+    if (is Borrow(entrypoint)) {
+      const borrower = Tezos.sender;
+      const borrowAmount = entrypoint;
+
+      if (borrower in storage.tokenBalance) {
+        if (storage.tokenBalance[borrower] >= borrowAmount && storage.borrowerAllowance[borrower] >= borrowAmount) {
+          storage.tokenBalance = updateTokenBalance(storage.tokenBalance, borrower, borrowAmount);
+          storage.borrowerAllowance = updateBorrowerAllowance(storage.borrowerAllowance, borrower, borrowAmount);
+        } else {
+          failwith("Insufficient balance or allowance");
+        }
+      } else {
+        failwith("User not registered");
+      }
+    } else if (is Repay(entrypoint)) {
+      const borrower = Tezos.sender;
+      const repayAmount = entrypoint;
+
+      if (borrower in storage.tokenBalance) {
+        if (storage.tokenBalance[borrower] >= repayAmount) {
+          storage.tokenBalance = updateTokenBalance(storage.tokenBalance, borrower, -repayAmount);
+          storage.borrowerAllowance = updateBorrowerAllowance(storage.borrowerAllowance, borrower, -repayAmount);
+        } else {
+          failwith("Insufficient balance");
+        }
+      } else {
+        failwith("User not registered");
+      }
+    } else if (is Withdraw(entrypoint)) {
+      const lender = Tezos.sender;
+      const withdrawAmount = entrypoint;
+
+      if (lender in storage.tokenBalance) {
+        if (storage.tokenBalance[lender] >= withdrawAmount) {
+          storage.tokenBalance = updateTokenBalance(storage.tokenBalance, lender, -withdrawAmount);
+        } else {
+          failwith("Insufficient balance");
+        }
+      } else {
+        failwith("User not registered");
+      }
+    } else {
+      failwith("Invalid entrypoint");
+    }
+  };
+
+const initialStorage: storage = {
+  tokenBalance: (Big_map.literal([]: list((address, nat)))),
+  borrowerAllowance: (Big_map.literal([]: list((address, nat))))
+};
+
+let borrowAmount: nat = 10n; // Adjust this value as needed
+
+// ...
+
+contract(Borrow(borrowAmount), initialStorage);
